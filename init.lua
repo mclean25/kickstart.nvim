@@ -628,6 +628,23 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        biome = {
+          cmd = { 'biome', 'lspProxy' },
+          filetypes = {
+            'astro',
+            'css',
+            'graphql',
+            'javascript',
+            'javascriptreact',
+            'json',
+            'jsonc',
+            'svelte',
+            'typescript',
+            'typescript.tsx',
+            'typescriptreact',
+            'vue',
+          },
+        },
 
         lua_ls = {
           -- cmd = { ... },
