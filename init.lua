@@ -100,6 +100,7 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.opt.number = true
+vim.opt.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.opt.relativenumber = true
@@ -176,7 +177,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 -- Config for netrw
 vim.g.netrw_bufsettings = 'nu rnu nobl nowrap ro'
-vim.keymap.set('n', '<leader>pv', '<cmd>Explore<CR>', { desc = 'Open explorer' })
+vim.keymap.set('n', '<leader>ex', '<cmd>Explore<CR>', { desc = 'Open explorer' })
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
