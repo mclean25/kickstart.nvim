@@ -255,9 +255,13 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      current_line_blame = true,
+      current_line_blame_opts = {
+        delay = 0,
+      },
     },
-    config = function()
-      require('gitsigns').setup()
+    config = function(_, opts)
+      require('gitsigns').setup(opts)
 
       vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<CR>', {})
     end,
