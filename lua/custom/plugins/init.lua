@@ -24,20 +24,14 @@ return {
     end,
   },
   {
-    'zbirenbaum/copilot-cmp',
-    event = 'InsertEnter',
-    config = function()
-      require('copilot_cmp').setup()
-    end,
-    dependencies = {
-      'zbirenbaum/copilot.lua',
-      cmd = 'Copilot',
-      config = function()
-        require('copilot').setup {
-          suggestion = { enabled = true },
-          panel = { enabled = true },
-        }
-      end,
+    'supermaven-inc/supermaven-nvim',
+    lazy = false,
+    opts = {
+      keymaps = {
+        accept_suggestion = '<Tab>',
+        clear_suggestion = '<C-]>',
+        accept_word = '<C-j>',
+      },
     },
   },
   {
