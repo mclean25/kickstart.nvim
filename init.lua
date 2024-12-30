@@ -174,6 +174,9 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+-- Config for netrw
+vim.g.netrw_bufsettings = 'nu rnu nobl nowrap ro'
+vim.keymap.set('n', '<leader>pv', '<cmd>Explore<CR>', { desc = 'Open explorer' })
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -641,7 +644,7 @@ require('lazy').setup({
         -- ts_ls = {},
         --
         biome = {
-          cmd = { 'biome', 'lspProxy' },
+          cmd = { 'biome', 'lsp-proxy' },
           filetypes = {
             'astro',
             'css',
@@ -851,6 +854,7 @@ require('lazy').setup({
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
+          { name = 'copilot' },
           {
             name = 'lazydev',
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
