@@ -32,6 +32,9 @@ return {
         clear_suggestion = '<C-]>',
         accept_word = '<C-j>',
       },
+      color = {
+        suggestion_color = '#C08D3D',
+      },
     },
   },
   {
@@ -39,5 +42,27 @@ return {
     version = '*',
     config = true,
     vim.keymap.set('n', '<leader>`', ':ToggleTerm<CR>'),
+  },
+  {
+    'kylechui/nvim-surround',
+    version = '*', -- Use for stability; remove for the latest version
+    config = function()
+      require('nvim-surround').setup {}
+    end,
+  },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+    config = function()
+      require('oil').setup {}
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open Oil (parent dir)' })
+      -- Open Oil parent directory in float window
+      vim.keymap.set('n', '<leader>-', require('oil').toggle_float, { desc = 'Open Oil (parent dir) in float window' })
+    end,
   },
 }
