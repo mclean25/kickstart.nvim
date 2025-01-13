@@ -28,7 +28,7 @@ return {
     lazy = false,
     opts = {
       keymaps = {
-        accept_suggestion = '<Tab>',
+        accept_suggestion = '<C-Y>',
         clear_suggestion = '<C-]>',
         accept_word = '<C-j>',
       },
@@ -89,5 +89,15 @@ return {
       '3rd/image.nvim', -- Optional image support in preview window: See `# Preview Mode` for more information
     },
     vim.keymap.set('n', '<leader>b', '<CMD>Neotree action=show source=filesystem position=left toggle=true<CR>', { desc = 'Toggle Neo-tree' }),
+    config = function()
+      require('neo-tree').setup {
+        close_if_last_window = true,
+        filesystem = {
+          follow_current_file = {
+            enabled = true,
+          },
+        },
+      }
+    end,
   },
 }
