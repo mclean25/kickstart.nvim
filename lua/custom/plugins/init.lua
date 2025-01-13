@@ -28,7 +28,7 @@ return {
     lazy = false,
     opts = {
       keymaps = {
-        accept_suggestion = '<C-Y>',
+        accept_suggestion = '<C-Enter>',
         clear_suggestion = '<C-]>',
         accept_word = '<C-j>',
       },
