@@ -30,6 +30,8 @@ return {
           disabled_filetypes = {
             statusline = {},
             winbar = {},
+            neotree = {},
+            harpoon = {},
           },
           ignore_focus = {},
           always_divide_middle = true,
@@ -59,6 +61,27 @@ return {
           lualine_x = {},
           lualine_y = {},
           lualine_z = { 'location' },
+        },
+        tabline = {
+          lualine_a = {
+            {
+              'buffers',
+              max_length = vim.o.columns * 2 / 3,
+              mode = 0,
+              separator = { left = '', right = '' },
+              filetype_names = {
+                TelescopePrompt = 'Telescope',
+                dashboard = 'Dashboard',
+                packer = 'Packer',
+                fzf = 'FZF',
+                alpha = 'Alpha',
+              },
+              buffers_color = {
+                active = { fg = '#ffffff', bg = '#008080' }, -- white text on teal background
+                inactive = { fg = '#ffffff', bg = '#1f1f1f' }, -- customize as needed
+              },
+            },
+          },
         },
       }
     end,
