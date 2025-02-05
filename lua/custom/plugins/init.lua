@@ -25,13 +25,14 @@ return {
         options = {
           icons_enabled = true,
           theme = 'auto',
-          component_separators = { left = '', right = '' },
-          section_separators = { left = '', right = '' },
+          component_separators = { left = '', right = '' },
+          section_separators = { left = '', right = '' },
           disabled_filetypes = {
             statusline = {},
             winbar = {},
-            neotree = {},
+            neotree = { 'neo-tree', 'NeoTree' },
             harpoon = {},
+            terminal = { 'toggleterm', 'toggleterm.nvim' },
           },
           ignore_focus = {},
           always_divide_middle = true,
@@ -48,7 +49,6 @@ return {
             {
               'mode',
               color = function()
-                --- Map each mode to a Tokyo Night inspired background color.
                 local mode_colors = {
                   n = '#7aa2f7', -- Normal (blue)
                   i = '#9ece6a', -- Insert (green)
@@ -70,10 +70,10 @@ return {
               'filename',
               path = 1,
               symbols = {
-                modified = '[+]', -- Text to show when the file is modified.
-                readonly = '[-]', -- Text to show when the file is non-modifiable or readonly.
-                unnamed = '[No Name]', -- Text to show for unnamed buffers.
-                newfile = '[New]', -- Text to show for newly created file before first write
+                modified = '[+]', -- When file is modified.
+                readonly = '[-]', -- When file is non-modifiable or readonly.
+                unnamed = '[No Name]',
+                newfile = '[New]',
               },
             },
           },
@@ -81,7 +81,31 @@ return {
           lualine_y = {},
           lualine_z = { 'location' },
         },
-        tabline = {},
+        tabline = {
+          lualine_a = {
+            {
+              'buffers',
+              max_length = vim.o.columns * 2 / 3,
+              mode = 0,
+              separator = { left = '', right = '' },
+              filetype_names = {
+                TelescopePrompt = 'Telescope',
+                dashboard = 'Dashboard',
+                packer = 'Packer',
+                fzf = 'FZF',
+                alpha = 'Alpha',
+              },
+              filter = function(buf)
+                -- Only show buffers that have unsaved changes.
+                return vim.bo[buf].modified
+              end,
+              buffers_color = {
+                active = { fg = '#c0caf5', bg = '#7aa2f7' },
+                inactive = { fg = '#c0caf5', bg = '#1a1b26' },
+              },
+            },
+          },
+        },
       }
     end,
   },
