@@ -44,7 +44,26 @@ return {
           },
         },
         sections = {
-          lualine_a = { 'mode' },
+          lualine_a = {
+            {
+              'mode',
+              color = function()
+                --- Map each mode to a Tokyo Night inspired background color.
+                local mode_colors = {
+                  n = '#7aa2f7', -- Normal (blue)
+                  i = '#9ece6a', -- Insert (green)
+                  v = '#bb9af7', -- Visual (purple)
+                  V = '#bb9af7', -- Visual line (purple)
+                  [''] = '#bb9af7', -- Visual block (purple)
+                  c = '#e0af68', -- Command (orange)
+                  R = '#f7768e', -- Replace (red)
+                  t = '#7aa2f7', -- Terminal (blue)
+                }
+                local mode = vim.fn.mode()
+                return { fg = '#ffffff', bg = mode_colors[mode] or '#7aa2f7' }
+              end,
+            },
+          },
           lualine_b = {},
           lualine_c = {
             {
@@ -62,27 +81,7 @@ return {
           lualine_y = {},
           lualine_z = { 'location' },
         },
-        tabline = {
-          lualine_a = {
-            {
-              'buffers',
-              max_length = vim.o.columns * 2 / 3,
-              mode = 0,
-              separator = { left = '', right = '' },
-              filetype_names = {
-                TelescopePrompt = 'Telescope',
-                dashboard = 'Dashboard',
-                packer = 'Packer',
-                fzf = 'FZF',
-                alpha = 'Alpha',
-              },
-              buffers_color = {
-                active = { fg = '#ffffff', bg = '#008080' }, -- white text on teal background
-                inactive = { fg = '#ffffff', bg = '#1f1f1f' }, -- customize as needed
-              },
-            },
-          },
-        },
+        tabline = {},
       }
     end,
   },
