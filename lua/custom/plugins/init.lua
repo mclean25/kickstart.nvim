@@ -82,29 +82,29 @@ return {
           lualine_z = { 'location' },
         },
         tabline = {
-          lualine_a = {
-            {
-              'buffers',
-              max_length = vim.o.columns * 2 / 3,
-              mode = 0,
-              separator = { left = '', right = '' },
-              filetype_names = {
-                TelescopePrompt = 'Telescope',
-                dashboard = 'Dashboard',
-                packer = 'Packer',
-                fzf = 'FZF',
-                alpha = 'Alpha',
-              },
-              filter = function(buf)
-                -- Only show buffers that have unsaved changes.
-                return vim.bo[buf].modified
-              end,
-              buffers_color = {
-                active = { fg = '#c0caf5', bg = '#7aa2f7' },
-                inactive = { fg = '#c0caf5', bg = '#1a1b26' },
-              },
-            },
-          },
+          -- lualine_a = {
+          --   {
+          --     'buffers',
+          --     max_length = vim.o.columns * 2 / 3,
+          --     mode = 0,
+          --     separator = { left = '', right = '' },
+          --     filetype_names = {
+          --       TelescopePrompt = 'Telescope',
+          --       dashboard = 'Dashboard',
+          --       packer = 'Packer',
+          --       fzf = 'FZF',
+          --       alpha = 'Alpha',
+          --     },
+          --     filter = function(buf)
+          --       -- Only show buffers that have unsaved changes.
+          --       return vim.bo[buf].modified
+          --     end,
+          --     buffers_color = {
+          --       active = { fg = '#c0caf5', bg = '#7aa2f7' },
+          --       inactive = { fg = '#c0caf5', bg = '#1a1b26' },
+          --     },
+          --   },
+          -- },
         },
       }
     end,
