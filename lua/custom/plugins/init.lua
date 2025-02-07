@@ -253,4 +253,37 @@ return {
       }
     end,
   },
+  {
+    'olimorris/codecompanion.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('codecompanion').setup {
+        strategies = {
+          chat = {
+            adapter = 'anthropic',
+          },
+          inline = {
+            adapter = 'anthropic',
+          },
+        },
+        adapters = {
+          anthropic = function()
+            return require('codecompanion.adapters').extend('anthropic', {
+              env = {
+                api_key = 'cmd:op read op://Employee/ooz3emoggf3n3cwrbcgpzswyu4/credential --no-newline',
+              },
+            })
+          end,
+        },
+      }
+      vim.keymap.set({ 'n', 'v' }, '<leader>ca', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
+      vim.keymap.set({ 'n', 'v' }, '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
+      vim.keymap.set('v', 'ci', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true })
+      -- Expand 'cc' into 'CodeCompanion' in the command line
+      vim.cmd [[cab cc CodeCompanion]]
+    end,
+  },
 }
