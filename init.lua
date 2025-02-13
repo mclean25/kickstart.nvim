@@ -408,6 +408,7 @@ require('lazy').setup({
         defaults = {
           path_display = {
             shorten = { len = 2, exclude = { 1, -1, -2 } },
+            preview = { truncate = false },
           },
         },
         -- pickers = {}

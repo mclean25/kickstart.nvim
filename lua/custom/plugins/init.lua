@@ -131,6 +131,7 @@ return {
   {
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; remove for the latest version
+    event = 'VeryLazy',
     config = function()
       require('nvim-surround').setup {}
     end,
@@ -223,16 +224,6 @@ return {
     end,
   },
   {
-    'kylechui/nvim-surround',
-    version = '*', -- Use for stability; omit to use `main` branch for the latest features
-    event = 'VeryLazy',
-    config = function()
-      require('nvim-surround').setup {
-        -- Configuration here, or leave empty to use defaults
-      }
-    end,
-  },
-  {
     'ruifm/gitlinker.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
@@ -269,6 +260,7 @@ return {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
     },
+    evev = 'VeryLazy',
     config = function()
       require('codecompanion').setup {
         strategies = {
