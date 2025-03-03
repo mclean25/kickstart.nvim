@@ -260,7 +260,6 @@ return {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
     },
-    evev = 'VeryLazy',
     config = function()
       require('codecompanion').setup {
         strategies = {
@@ -286,6 +285,14 @@ return {
       vim.keymap.set('v', 'ci', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true })
       -- Expand 'cc' into 'CodeCompanion' in the command line
       vim.cmd [[cab cc CodeCompanion]]
+    end,
+  },
+  {
+    'gorbit99/codewindow.nvim',
+    config = function()
+      local codewindow = require 'codewindow'
+      codewindow.setup()
+      codewindow.apply_default_keybinds()
     end,
   },
 }
