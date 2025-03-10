@@ -184,10 +184,10 @@ return {
       local keymap = {
         -- Use the "sine" easing function
         ['<C-u>'] = function()
-          neoscroll.ctrl_u { duration = 250, easing = 'sine' }
+          neoscroll.ctrl_u { duration = 150, easing = 'sine' }
         end,
         ['<C-d>'] = function()
-          neoscroll.ctrl_d { duration = 250, easing = 'sine' }
+          neoscroll.ctrl_d { duration = 150, easing = 'sine' }
         end,
         -- Use the "circular" easing function
         ['<C-b>'] = function()
@@ -195,13 +195,6 @@ return {
         end,
         ['<C-f>'] = function()
           neoscroll.ctrl_f { duration = 450, easing = 'circular' }
-        end,
-        -- When no value is passed the `easing` option supplied in `setup()` is used
-        ['<C-y>'] = function()
-          neoscroll.scroll(-0.1, { move_cursor = false, duration = 100 })
-        end,
-        ['<C-e>'] = function()
-          neoscroll.scroll(0.1, { move_cursor = false, duration = 100 })
         end,
       }
       local modes = { 'n', 'v', 'x' }
@@ -239,47 +232,6 @@ return {
         },
         mappings = '<leader>gl',
       }
-    end,
-  },
-  {
-    'olimorris/codecompanion.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-treesitter/nvim-treesitter',
-    },
-    config = function()
-      require('codecompanion').setup {
-        strategies = {
-          chat = {
-            adapter = 'anthropic',
-          },
-          inline = {
-            adapter = 'anthropic',
-          },
-        },
-        adapters = {
-          anthropic = function()
-            return require('codecompanion.adapters').extend('anthropic', {
-              env = {
-                api_key = 'cmd:op read op://Employee/ooz3emoggf3n3cwrbcgpzswyu4/credential --no-newline',
-              },
-            })
-          end,
-        },
-      }
-      vim.keymap.set({ 'n', 'v' }, '<leader>ca', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
-      vim.keymap.set({ 'n', 'v' }, '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
-      vim.keymap.set('v', 'ci', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true })
-      -- Expand 'cc' into 'CodeCompanion' in the command line
-      vim.cmd [[cab cc CodeCompanion]]
-    end,
-  },
-  {
-    'gorbit99/codewindow.nvim',
-    config = function()
-      local codewindow = require 'codewindow'
-      codewindow.setup()
-      codewindow.apply_default_keybinds()
     end,
   },
   {
