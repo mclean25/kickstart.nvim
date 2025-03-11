@@ -36,6 +36,12 @@ vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
 
+-- Set up 'd' and 'dd' to delete without copying to clipboard
+-- Use 'x' to cut (delete and copy to clipboard)
+vim.keymap.set({ 'n', 'v' }, 'd', '"_d', { desc = 'Delete without copying' })
+vim.keymap.set({ 'n' }, 'dd', '"_dd', { desc = 'Delete line without copying' })
+vim.keymap.set({ 'n', 'v' }, 'D', '"_D', { desc = 'Delete to end of line without copying' })
+
 -- Enable break indent
 vim.opt.breakindent = true
 
