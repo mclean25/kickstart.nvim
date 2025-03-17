@@ -173,12 +173,71 @@ return {
             enabled = true,
           },
         },
-        opts = {
-          adapters = {
-            ['neotest-vitest'] = {},
-          },
-        },
       }
+    end,
+  },
+  {
+    'karb94/neoscroll.nvim',
+    config = function()
+      local neoscroll = require 'neoscroll'
+      neoscroll.setup()
+      local keymap = {
+        -- Use the "sine" easing function
+        ['<C-u>'] = function()
+          neoscroll.ctrl_u { duration = 150, easing = 'sine' }
+        end,
+        ['<C-d>'] = function()
+          neoscroll.ctrl_d { duration = 150, easing = 'sine' }
+        end,
+        -- Use the "circular" easing function
+        ['<C-b>'] = function()
+          neoscroll.ctrl_b { duration = 450, easing = 'circular' }
+        end,
+        ['<C-f>'] = function()
+          neoscroll.ctrl_f { duration = 450, easing = 'circular' }
+        end,
+      }
+      local modes = { 'n', 'v', 'x' }
+      for key, func in pairs(keymap) do
+        vim.keymap.set(modes, key, func)
+      end
+    end,
+  },
+  {
+    'ruifm/gitlinker.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('gitlinker').setup {
+        opts = {
+          remote = nil, -- force the use of a specific remote
+          -- adds current line nr in the url for normal mode
+          add_current_line_on_normal_mode = true,
+          -- callback for what to do with the url
+          action_callback = require('gitlinker.actions').copy_to_clipboard,
+          -- print the url after performing the action
+          print_url = true,
+        },
+        callbacks = {
+          ['github.com'] = require('gitlinker.hosts').get_github_type_url,
+          ['gitlab.com'] = require('gitlinker.hosts').get_gitlab_type_url,
+          ['try.gitea.io'] = require('gitlinker.hosts').get_gitea_type_url,
+          ['codeberg.org'] = require('gitlinker.hosts').get_gitea_type_url,
+          ['bitbucket.org'] = require('gitlinker.hosts').get_bitbucket_type_url,
+          ['try.gogs.io'] = require('gitlinker.hosts').get_gogs_type_url,
+          ['git.sr.ht'] = require('gitlinker.hosts').get_srht_type_url,
+          ['git.launchpad.net'] = require('gitlinker.hosts').get_launchpad_type_url,
+          ['repo.or.cz'] = require('gitlinker.hosts').get_repoorcz_type_url,
+          ['git.kernel.org'] = require('gitlinker.hosts').get_cgit_type_url,
+          ['git.savannah.gnu.org'] = require('gitlinker.hosts').get_cgit_type_url,
+        },
+        mappings = '<leader>gl',
+      }
+    end,
+  },
+  {
+    'augmentcode/augment.vim',
+    config = function()
+      vim.api.nvim_set_keymap('i', '<C-y>', '<cmd>call augment#Accept()<CR>', { noremap = true, silent = true })
     end,
   },
 }
