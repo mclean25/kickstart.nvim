@@ -184,17 +184,10 @@ return {
       local keymap = {
         -- Use the "sine" easing function
         ['<C-u>'] = function()
-          neoscroll.ctrl_u { duration = 150, easing = 'sine' }
+          neoscroll.ctrl_u { duration = 100, easing = 'sine' }
         end,
         ['<C-d>'] = function()
-          neoscroll.ctrl_d { duration = 150, easing = 'sine' }
-        end,
-        -- Use the "circular" easing function
-        ['<C-b>'] = function()
-          neoscroll.ctrl_b { duration = 450, easing = 'circular' }
-        end,
-        ['<C-f>'] = function()
-          neoscroll.ctrl_f { duration = 450, easing = 'circular' }
+          neoscroll.ctrl_d { duration = 100, easing = 'sine' }
         end,
       }
       local modes = { 'n', 'v', 'x' }
