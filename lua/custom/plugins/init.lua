@@ -228,9 +228,16 @@ return {
     end,
   },
   {
-    'augmentcode/augment.vim',
-    config = function()
-      vim.api.nvim_set_keymap('i', '<C-y>', '<cmd>call augment#Accept()<CR>', { noremap = true, silent = true })
-    end,
+    'supermaven-inc/supermaven-nvim',
+    lazy = false,
+    opts = {
+      keymaps = {
+        accept_suggestion = '<C-y>',
+        clear_suggestion = '<C-]>',
+      },
+      color = {
+        suggestion_color = '#C08D3D',
+      },
+    },
   },
 }
