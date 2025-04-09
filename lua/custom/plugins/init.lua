@@ -165,16 +165,25 @@ return {
       '3rd/image.nvim', -- Optional image support in preview window: See `# Preview Mode` for more information
     },
     vim.keymap.set('n', '<leader>b', '<CMD>Neotree action=show source=filesystem position=left toggle=true<CR>', { desc = 'Toggle Neo-tree' }),
-    config = function()
-      require('neo-tree').setup {
+    opts = {
+      filesystem = {
         close_if_last_window = true,
-        filesystem = {
-          follow_current_file = {
-            enabled = true,
-          },
+        follow_current_file = {
+          enabled = true,
         },
-      }
-    end,
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = false,
+          hide_gitignored = false,
+          hide_hidden = true,
+          hide_by_name = {
+            'node_modules',
+            '.git',
+          },
+          hide_by_pattern = {},
+        },
+      },
+    },
   },
   {
     'karb94/neoscroll.nvim',
