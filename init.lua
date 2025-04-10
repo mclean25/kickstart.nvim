@@ -849,76 +849,6 @@ require('lazy').setup({
       }
     end,
   },
-  {
-    'gmr458/vscode_modern_theme.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('vscode_modern').setup {
-        cursorline = true,
-        transparent_background = false,
-        nvim_tree_darker = true,
-      }
-      -- vim.cmd.colorscheme 'vscode_modern'
-    end,
-  },
-  -- ==========================================
-  -- Themes
-  -- ==========================================
-  {
-    'ellisonleao/gruvbox.nvim',
-    priority = 1000,
-    config = function()
-      -- vim.cmd.colorscheme 'gruvbox'
-    end,
-  },
-  {
-    'rose-pine/neovim',
-    priority = 1000,
-    name = 'rose-pine',
-    config = function()
-      -- vim.cmd 'colorscheme rose-pine'
-    end,
-  },
-  {
-    'folke/tokyonight.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'tokyonight'
-    end,
-  },
-  {
-    'olivercederborg/poimandres.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('poimandres').setup {
-        -- leave this setup function empty for default config
-        -- or refer to the configuration section
-        -- for configuration options
-      }
-    end,
-
-    -- optionally set the colorscheme within lazy config
-    init = function()
-      -- vim.cmd 'colorscheme poimandres'
-    end,
-  },
-  {
-    'f-person/auto-dark-mode.nvim',
-    opts = {
-      update_interval = 1000,
-      set_dark_mode = function()
-        vim.api.nvim_set_option_value('background', 'dark', {})
-      end,
-      set_light_mode = function()
-        vim.api.nvim_set_option_value('background', 'light', {})
-      end,
-      fallback = 'dark',
-      update_interval = 3000,
-    },
-  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -1003,6 +933,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
+  { import = 'custom.themes' },
 
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
