@@ -166,8 +166,8 @@ return {
     },
     vim.keymap.set('n', '<leader>b', '<CMD>Neotree action=show source=filesystem position=left toggle=true<CR>', { desc = 'Toggle Neo-tree' }),
     opts = {
+      close_if_last_window = true,
       filesystem = {
-        close_if_last_window = true,
         follow_current_file = {
           enabled = true,
         },
