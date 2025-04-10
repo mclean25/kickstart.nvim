@@ -80,6 +80,14 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Set folding options
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+-- Don't auto-fold everything when opening a file
+vim.opt.foldenable = false
+-- Start folding at level 99 (effectively no automatic folding)
+vim.opt.foldlevel = 99
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
