@@ -56,11 +56,16 @@ return {
     end,
   },
   {
+    'shaunsingh/nord.nvim',
+    priority = 1000,
+  },
+  { 'EdenEast/nightfox.nvim', priority = 1000 },
+  {
     'zaldih/themery.nvim',
     lazy = false,
     config = function()
       require('themery').setup {
-        themes = { 'vscode_modern', 'tokyonight', 'rose-pine', 'poimandres' },
+        themes = { 'nightfox', 'nordfox', 'vscode_modern', 'tokyonight', 'rose-pine', 'poimandres', 'nord' },
         livePreview = true,
       }
     end,
