@@ -186,23 +186,11 @@ return {
     },
   },
   {
-    'karb94/neoscroll.nvim',
+    'petertriho/nvim-scrollbar',
     config = function()
-      local neoscroll = require 'neoscroll'
-      neoscroll.setup()
-      local keymap = {
-        -- Use the "sine" easing function
-        ['<C-u>'] = function()
-          neoscroll.ctrl_u { duration = 30, easing = 'sine' }
-        end,
-        ['<C-d>'] = function()
-          neoscroll.ctrl_d { duration = 30, easing = 'sine' }
-        end,
+      require('scrollbar').setup {
+        show = true,
       }
-      local modes = { 'n', 'v', 'x' }
-      for key, func in pairs(keymap) do
-        vim.keymap.set(modes, key, func)
-      end
     end,
   },
   {
@@ -249,4 +237,17 @@ return {
       },
     },
   },
+  -- {
+  --   'dstein64/nvim-scrollview',
+  --   config = function()
+  --     require('nvim-scrollview').setup {
+  --       excluded_filetypes = { 'nerdtree' },
+  --       current_only = true,
+  --       base = 'buffer',
+  --       column = 80,
+  --       signs_on_startup = { 'all' },
+  --       diagnostics_severities = { vim.diagnostic.severity.ERROR },
+  --     }
+  --   end,
+  -- },
 }
