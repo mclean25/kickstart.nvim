@@ -250,4 +250,84 @@ return {
   --     }
   --   end,
   -- },
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+      'nvim-lua/plenary.nvim',
+      'antoinemadec/FixCursorHold.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'marilari88/neotest-vitest',
+    },
+    config = function()
+      require('neotest').setup({
+        adapters = {
+          require('neotest-vitest')({
+            filter_dir = function(name, rel_path, root)
+              return name ~= "node_modules"
+            end,
+            -- Handle your specific vitest config setup
+            is_test_file = function(file_path)
+              return string.match(file_path, "%.spec%.") or string.match(file_path, "%.test%.") or string.match(file_path, "%.integration%.")
+            end,
+            vitestConfigPath = function(root_dir)
+              -- Look for your specific config files
+              local configs = {
+                "vitest.config.mts",
+                "vitest.config.ts",
+                "vitest.config.js", 
+                "vite.config.ts",
+                "vite.config.js"
+              }
+              for _, config in ipairs(configs) do
+                local config_path = root_dir .. "/" .. config
+                if vim.fn.filereadable(config_path) == 1 then
+                  return config_path
+                end
+              end
+              return nil
+            end,
+            -- Set working directory to find package.json
+            cwd = function(path)
+              -- Walk up the directory tree to find package.json
+              local current = path
+              while current and current ~= "/" do
+                if vim.fn.filereadable(current .. "/package.json") == 1 then
+                  return current
+                end
+                current = vim.fn.fnamemodify(current, ":h")
+              end
+              return vim.fn.getcwd()
+            end,
+          }),
+        },
+        output = {
+          enabled = true,
+          open_on_run = "short",
+        },
+      })
+
+      local neotest = require('neotest')
+      
+      vim.keymap.set('n', '<leader>tt', function()
+        neotest.run.run()
+      end, { desc = '[T]est run nearest [T]est' })
+      
+      vim.keymap.set('n', '<leader>tf', function()
+        neotest.run.run(vim.fn.expand('%'))
+      end, { desc = '[T]est run current [F]ile' })
+      
+      vim.keymap.set('n', '<leader>ts', function()
+        neotest.run.run({ suite = true })
+      end, { desc = '[T]est run [S]uite' })
+      
+      vim.keymap.set('n', '<leader>to', function()
+        neotest.output.open({ enter = true })
+      end, { desc = '[T]est [O]utput' })
+      
+      vim.keymap.set('n', '<leader>tp', function()
+        neotest.output_panel.toggle()
+      end, { desc = '[T]est output [P]anel' })
+    end,
+  },
 }
