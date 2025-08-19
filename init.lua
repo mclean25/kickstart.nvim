@@ -202,7 +202,7 @@ else
       },
       config = function(_, opts)
         require('gitsigns').setup(opts)
-
+        require('scrollbar.handlers.gitsigns').setup()
         vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<CR>', {})
       end,
     },
@@ -341,10 +341,7 @@ else
           --  All the info you're looking for is in `:help telescope.setup()`
           --
           defaults = {
-            path_display = {
-              shorten = { len = 2, exclude = { 1, -1, -2 } },
-              preview = { truncate = false },
-            },
+            path_display = { 'smart' },
             file_ignore_patterns = { 'node_modules/', '^.git/', '.cache', '__pycache__', '.sst/', '^dist/' },
           },
           -- pickers = {}
@@ -725,6 +722,11 @@ else
         end,
         formatters_by_ft = {
           lua = { 'stylua' },
+          javascript = { 'biome' },
+          javascriptreact = { 'biome' },
+          typescript = { 'biome' },
+          typescriptreact = { 'biome' },
+          json = { 'biome' },
           -- Conform can also run multiple formatters sequentially
           -- python = { "isort", "black" },
           --
