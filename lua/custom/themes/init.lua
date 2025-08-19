@@ -65,7 +65,7 @@ return {
     lazy = false,
     config = function()
       require('themery').setup {
-        themes = { 'nightfox', 'nordfox', 'vscode_modern', 'tokyonight', 'rose-pine', 'poimandres', 'nord' },
+        themes = { 'nightfox', 'dawnfox', 'terafox', 'carbonfox', 'duskfox', 'nordfox', 'vscode_modern', 'tokyonight', 'rose-pine', 'poimandres', 'nord' },
         livePreview = true,
       }
     end,
