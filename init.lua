@@ -84,13 +84,16 @@ else
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.opt.scrolloff = 10
 
-  -- Set folding options
+  -- Set folding options for Neovim 0.10+
   vim.opt.foldmethod = 'expr'
-  vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
-  -- Don't auto-fold everything when opening a file
-  vim.opt.foldenable = false
-  -- Start folding at level 99 (effectively no automatic folding)
+  vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+  -- Enable folding but start with all folds open
+  vim.opt.foldenable = true
+  -- Start with all folds open (high level = more open folds)
   vim.opt.foldlevel = 99
+  vim.opt.foldlevelstart = 99
+  -- Minimum lines to create a fold
+  vim.opt.foldminlines = 1
 
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
@@ -886,7 +889,7 @@ else
       main = 'nvim-treesitter.configs', -- Sets main module to use for opts
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
       opts = {
-        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'typescript', 'tsx', 'javascript', 'json' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = {
@@ -897,6 +900,10 @@ else
           additional_vim_regex_highlighting = { 'ruby' },
         },
         indent = { enable = true, disable = { 'ruby' } },
+        -- Enable treesitter-based folding
+        fold = {
+          enable = true,
+        },
       },
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
