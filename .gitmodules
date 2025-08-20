@@ -1,0 +1,3 @@
+[submodule "nvim-file-history"]
+	path = nvim-file-history
+	url = git@github.com:mclean25/nvim-file-history.git
