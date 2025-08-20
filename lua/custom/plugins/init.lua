@@ -330,4 +330,43 @@ return {
       end, { desc = '[T]est output [P]anel' })
     end,
   },
+  
+  -- File History Plugin (local development)
+  {
+    dir = vim.fn.stdpath('config') .. '/nvim-file-history',
+    name = 'file-history-dev',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      local file_history = require('nvim-file-history')
+      local telescope_integration = require('nvim-file-history.telescope')
+      
+      file_history.setup({
+        max_history_size = 100,
+        exclude_patterns = {
+          '%.git/',
+          'node_modules/',
+          '%.cache/',
+          '/tmp/',
+          '^oil:/',
+        },
+        exclude_filetypes = {
+          'help',
+          'NvimTree',
+          'neo-tree',
+          'telescope',
+          'lazy',
+          'mason',
+          'oil',
+        }
+      })
+      
+      -- Keybindings for file history
+      vim.keymap.set('n', '<leader>sH', telescope_integration.file_history_picker, { desc = '[S]earch file [H]istory' })
+      vim.keymap.set('n', '<leader>sb', telescope_integration.breadcrumb_picker, { desc = '[S]earch [B]readcrumbs' })
+      
+      -- Commands
+      vim.api.nvim_create_user_command('FileHistory', telescope_integration.file_history_picker, {})
+      vim.api.nvim_create_user_command('FileBreadcrumbs', telescope_integration.breadcrumb_picker, {})
+    end,
+  },
 }

@@ -969,40 +969,7 @@ else
 
 
 
-  -- Setup Buffer History Plugin after all plugins are loaded
-  vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-      local buffer_history = require('custom.modules.buffer-history')
-      local telescope_integration = require('custom.modules.buffer-history-telescope')
-      
-      buffer_history.setup({
-        max_history_size = 100,
-        exclude_patterns = {
-          '%.git/',
-          'node_modules/',
-          '%.cache/',
-          '/tmp/',
-          '^oil:/',
-        },
-        exclude_filetypes = {
-          'help',
-          'NvimTree',
-          'neo-tree',
-          'telescope',
-          'lazy',
-          'mason',
-        }
-      })
-      
-      -- Keybindings for buffer history
-      vim.keymap.set('n', '<leader>sH', telescope_integration.buffer_history_picker, { desc = '[S]earch buffer [H]istory' })
-      vim.keymap.set('n', '<leader>sb', telescope_integration.breadcrumb_picker, { desc = '[S]earch [B]readcrumbs' })
-      
-      -- Commands
-      vim.api.nvim_create_user_command('BufferHistory', telescope_integration.buffer_history_picker, {})
-      vim.api.nvim_create_user_command('BufferBreadcrumbs', telescope_integration.breadcrumb_picker, {})
-    end,
-  })
+
 
   -- The line beneath this is called `modeline`. See `:help modeline`
   -- vim: ts=2 sts=2 sw=2 et
