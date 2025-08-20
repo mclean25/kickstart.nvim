@@ -113,7 +113,7 @@ else
 
   -- Config for netrw
   vim.g.netrw_bufsettings = 'nu rnu nobl nowrap ro'
-  vim.keymap.set('n', '<leader>ex', '<cmd>Explore<CR>', { desc = 'Open explorer' })
+  -- vim.keymap.set('n', '<leader>ex', '<cmd>Explore<CR>', { desc = 'Open explorer' })
   -- TIP: Disable arrow keys in normal mode
   -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
   -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -966,10 +966,6 @@ else
       },
     },
   })
-
-
-
-
 
   -- The line beneath this is called `modeline`. See `:help modeline`
   -- vim: ts=2 sts=2 sw=2 et

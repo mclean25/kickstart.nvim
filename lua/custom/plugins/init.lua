@@ -164,7 +164,7 @@ return {
       'MunifTanjim/nui.nvim',
       '3rd/image.nvim', -- Optional image support in preview window: See `# Preview Mode` for more information
     },
-    vim.keymap.set('n', '<leader>b', '<CMD>Neotree action=show source=filesystem position=left toggle=true<CR>', { desc = 'Toggle Neo-tree' }),
+    vim.keymap.set('n', '<leader>ex', '<CMD>Neotree action=show source=filesystem position=left toggle=true<CR>', { desc = 'Toggle Neo-tree' }),
     opts = {
       close_if_last_window = true,
       filesystem = {
@@ -260,27 +260,27 @@ return {
       'marilari88/neotest-vitest',
     },
     config = function()
-      require('neotest').setup({
+      require('neotest').setup {
         adapters = {
-          require('neotest-vitest')({
+          require 'neotest-vitest' {
             filter_dir = function(name, rel_path, root)
-              return name ~= "node_modules"
+              return name ~= 'node_modules'
             end,
             -- Handle your specific vitest config setup
             is_test_file = function(file_path)
-              return string.match(file_path, "%.spec%.") or string.match(file_path, "%.test%.") or string.match(file_path, "%.integration%.")
+              return string.match(file_path, '%.spec%.') or string.match(file_path, '%.test%.') or string.match(file_path, '%.integration%.')
             end,
             vitestConfigPath = function(root_dir)
               -- Look for your specific config files
               local configs = {
-                "vitest.config.mts",
-                "vitest.config.ts",
-                "vitest.config.js", 
-                "vite.config.ts",
-                "vite.config.js"
+                'vitest.config.mts',
+                'vitest.config.ts',
+                'vitest.config.js',
+                'vite.config.ts',
+                'vite.config.js',
               }
               for _, config in ipairs(configs) do
-                local config_path = root_dir .. "/" .. config
+                local config_path = root_dir .. '/' .. config
                 if vim.fn.filereadable(config_path) == 1 then
                   return config_path
                 end
@@ -291,56 +291,56 @@ return {
             cwd = function(path)
               -- Walk up the directory tree to find package.json
               local current = path
-              while current and current ~= "/" do
-                if vim.fn.filereadable(current .. "/package.json") == 1 then
+              while current and current ~= '/' do
+                if vim.fn.filereadable(current .. '/package.json') == 1 then
                   return current
                 end
-                current = vim.fn.fnamemodify(current, ":h")
+                current = vim.fn.fnamemodify(current, ':h')
               end
               return vim.fn.getcwd()
             end,
-          }),
+          },
         },
         output = {
           enabled = true,
-          open_on_run = "short",
+          open_on_run = 'short',
         },
-      })
+      }
 
-      local neotest = require('neotest')
-      
+      local neotest = require 'neotest'
+
       vim.keymap.set('n', '<leader>tt', function()
         neotest.run.run()
       end, { desc = '[T]est run nearest [T]est' })
-      
+
       vim.keymap.set('n', '<leader>tf', function()
-        neotest.run.run(vim.fn.expand('%'))
+        neotest.run.run(vim.fn.expand '%')
       end, { desc = '[T]est run current [F]ile' })
-      
+
       vim.keymap.set('n', '<leader>ts', function()
-        neotest.run.run({ suite = true })
+        neotest.run.run { suite = true }
       end, { desc = '[T]est run [S]uite' })
-      
+
       vim.keymap.set('n', '<leader>to', function()
-        neotest.output.open({ enter = true })
+        neotest.output.open { enter = true }
       end, { desc = '[T]est [O]utput' })
-      
+
       vim.keymap.set('n', '<leader>tp', function()
         neotest.output_panel.toggle()
       end, { desc = '[T]est output [P]anel' })
     end,
   },
-  
+
   -- File History Plugin (local development)
   {
-    dir = vim.fn.stdpath('config') .. '/nvim-file-history',
+    dir = vim.fn.stdpath 'config' .. '/nvim-file-history',
     name = 'file-history-dev',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     config = function()
-      local file_history = require('nvim-file-history')
-      local telescope_integration = require('nvim-file-history.telescope')
-      
-      file_history.setup({
+      local file_history = require 'nvim-file-history'
+      local telescope_integration = require 'nvim-file-history.telescope'
+
+      file_history.setup {
         max_history_size = 100,
         exclude_patterns = {
           '%.git/',
@@ -357,16 +357,14 @@ return {
           'lazy',
           'mason',
           'oil',
-        }
-      })
-      
+        },
+      }
+
       -- Keybindings for file history
-      vim.keymap.set('n', '<leader>sH', telescope_integration.file_history_picker, { desc = '[S]earch file [H]istory' })
-      vim.keymap.set('n', '<leader>sb', telescope_integration.breadcrumb_picker, { desc = '[S]earch [B]readcrumbs' })
-      
+      vim.keymap.set('n', '<leader>b', telescope_integration.file_history_picker, { desc = 'File [B]ack history' })
+
       -- Commands
       vim.api.nvim_create_user_command('FileHistory', telescope_integration.file_history_picker, {})
-      vim.api.nvim_create_user_command('FileBreadcrumbs', telescope_integration.breadcrumb_picker, {})
     end,
   },
 }
