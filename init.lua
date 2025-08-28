@@ -45,6 +45,10 @@ else
   vim.keymap.set({ 'n', 'v' }, 'd', '"_d', { desc = 'Delete without copying' })
   vim.keymap.set({ 'n' }, 'dd', '"_dd', { desc = 'Delete line without copying' })
   vim.keymap.set({ 'n', 'v' }, 'D', '"_D', { desc = 'Delete to end of line without copying' })
+  
+  -- Make 'c' in visual mode delete without copying
+  vim.keymap.set('v', 'c', '"_c', { desc = 'Change without copying' })
+  vim.keymap.set('v', 'C', '"_C', { desc = 'Change to end of line without copying' })
 
   -- Enable break indent
   vim.opt.breakindent = true
