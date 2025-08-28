@@ -346,6 +346,17 @@ else
           defaults = {
             path_display = { 'smart' },
             file_ignore_patterns = { 'node_modules/', '^.git/', '.cache', '__pycache__', '.sst/', '^dist/' },
+            dynamic_preview_title = true,
+            layout_strategy = 'horizontal',
+            layout_config = {
+              horizontal = {
+                preview_width = 0.6,
+                results_width = 0.4,
+              },
+              width = 0.95,
+              height = 0.85,
+              preview_cutoff = 120,
+            },
           },
           -- pickers = {}
           extensions = {
@@ -889,7 +900,23 @@ else
       main = 'nvim-treesitter.configs', -- Sets main module to use for opts
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
       opts = {
-        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'typescript', 'tsx', 'javascript', 'json' },
+        ensure_installed = {
+          'bash',
+          'c',
+          'diff',
+          'html',
+          'lua',
+          'luadoc',
+          'markdown',
+          'markdown_inline',
+          'query',
+          'vim',
+          'vimdoc',
+          'typescript',
+          'tsx',
+          'javascript',
+          'json',
+        },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = {
@@ -976,7 +1003,7 @@ else
 
   -- The line beneath this is called `modeline`. See `:help modeline`
   -- vim: ts=2 sts=2 sw=2 et
-  
+
   -- Set up LSP reference highlighting to use theme colors
   vim.api.nvim_create_autocmd('ColorScheme', {
     pattern = '*',
@@ -987,7 +1014,7 @@ else
       vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'Visual' })
     end,
   })
-  
+
   -- Apply highlights immediately
   vim.defer_fn(function()
     vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'Visual' })
