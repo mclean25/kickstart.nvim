@@ -976,4 +976,22 @@ else
 
   -- The line beneath this is called `modeline`. See `:help modeline`
   -- vim: ts=2 sts=2 sw=2 et
+  
+  -- Set up LSP reference highlighting to use theme colors
+  vim.api.nvim_create_autocmd('ColorScheme', {
+    pattern = '*',
+    callback = function()
+      -- Link LSP references to existing highlight groups that themes define
+      vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'Visual' })
+      vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'Visual' })
+      vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'Visual' })
+    end,
+  })
+  
+  -- Apply highlights immediately
+  vim.defer_fn(function()
+    vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'Visual' })
+    vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'Visual' })
+    vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'Visual' })
+  end, 100)
 end
