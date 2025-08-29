@@ -49,6 +49,9 @@ else
   -- Make 'c' in visual mode delete without copying
   vim.keymap.set('v', 'c', '"_c', { desc = 'Change without copying' })
   vim.keymap.set('v', 'C', '"_C', { desc = 'Change to end of line without copying' })
+  
+  -- Make 'p' in visual mode paste without copying what's being replaced
+  vim.keymap.set('v', 'p', '"_dP', { desc = 'Paste without copying replaced text' })
 
   -- Enable break indent
   vim.opt.breakindent = true
