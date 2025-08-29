@@ -45,11 +45,11 @@ else
   vim.keymap.set({ 'n', 'v' }, 'd', '"_d', { desc = 'Delete without copying' })
   vim.keymap.set({ 'n' }, 'dd', '"_dd', { desc = 'Delete line without copying' })
   vim.keymap.set({ 'n', 'v' }, 'D', '"_D', { desc = 'Delete to end of line without copying' })
-  
+
   -- Make 'c' in visual mode delete without copying
   vim.keymap.set('v', 'c', '"_c', { desc = 'Change without copying' })
   vim.keymap.set('v', 'C', '"_C', { desc = 'Change to end of line without copying' })
-  
+
   -- Make 'p' in visual mode paste without copying what's being replaced
   vim.keymap.set('v', 'p', '"_dP', { desc = 'Paste without copying replaced text' })
 
@@ -104,6 +104,13 @@ else
 
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
+
+   -- Yank current buffer's filename relative to pwd
+   vim.keymap.set('n', '<leader>yf', function()
+     local relative_path = vim.fn.fnamemodify(vim.fn.expand('%'), ':.')
+     vim.fn.setreg('+', relative_path)
+     vim.notify('Copied relative path: ' .. relative_path)
+   end, { desc = '[Y]ank [f]ilename relative to pwd' })
 
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
