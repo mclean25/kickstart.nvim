@@ -60,12 +60,39 @@ return {
     priority = 1000,
   },
   { 'EdenEast/nightfox.nvim', priority = 1000 },
+  { 'ellisonleao/gruvbox.nvim', priority = 1000 },
   {
     'zaldih/themery.nvim',
     lazy = false,
     config = function()
       require('themery').setup {
-        themes = { 'nightfox', 'dawnfox', 'terafox', 'carbonfox', 'duskfox', 'nordfox', 'vscode_modern', 'tokyonight', 'rose-pine', 'poimandres', 'nord' },
+        themes = {
+          'nightfox',
+          'dawnfox',
+          'terafox',
+          'carbonfox',
+          'duskfox',
+          'nordfox',
+          'vscode_modern',
+          'tokyonight',
+          'rose-pine',
+          'poimandres',
+          'nord',
+          {
+            name = 'Gruvbox light',
+            colorscheme = 'gruvbox',
+            before = [[
+              vim.opt.background = "light"
+            ]],
+          },
+          {
+            name = 'Gruvbox dark',
+            colorscheme = 'gruvbox',
+            before = [[
+              vim.opt.background = "dark"
+            ]],
+          },
+        },
         livePreview = true,
       }
     end,
