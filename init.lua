@@ -105,12 +105,12 @@ else
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
 
-   -- Yank current buffer's filename relative to pwd
-   vim.keymap.set('n', '<leader>yf', function()
-     local relative_path = vim.fn.fnamemodify(vim.fn.expand('%'), ':.')
-     vim.fn.setreg('+', relative_path)
-     vim.notify('Copied relative path: ' .. relative_path)
-   end, { desc = '[Y]ank [f]ilename relative to pwd' })
+  -- Yank current buffer's filename relative to pwd
+  vim.keymap.set('n', '<leader>yf', function()
+    local relative_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
+    vim.fn.setreg('+', relative_path)
+    vim.notify('Copied relative path: ' .. relative_path)
+  end, { desc = '[Y]ank [f]ilename relative to pwd' })
 
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
