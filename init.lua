@@ -359,13 +359,32 @@ else
           --
           defaults = {
             path_display = { 'smart' },
-            file_ignore_patterns = { 'node_modules/', '^.git/', '.cache', '__pycache__', '.sst/', '^dist/' },
+            file_ignore_patterns = { 
+              'node_modules/', '^.git/', '^%.cache/', '__pycache__', '.sst/', '^dist/',
+              'logs/', '%.log$', '%.tmp$', '.next/', '.turbo/', 'coverage/', 'build/', 'out/',
+              '%.pnpm/', 'pnpm%-lock%.yaml$', '%.DS_Store$', 'sst%-env%.d%.ts$'
+            },
+            -- Performance optimizations
+            vimgrep_arguments = {
+              'rg',
+              '--color=never',
+              '--no-heading',
+              '--with-filename',
+              '--line-number',
+              '--column',
+              '--smart-case',
+              '--hidden',
+              '--glob=!.git/',
+            },
+            find_command = vim.fn.executable('fd') == 1 and { 
+              'fd', '--type', 'f', '--hidden', '--follow', '--exclude', '.git'
+            } or nil,
             dynamic_preview_title = true,
             layout_strategy = 'horizontal',
             layout_config = {
               horizontal = {
-                preview_width = 0.6,
-                results_width = 0.4,
+                preview_width = 0.5,
+                results_width = 0.5,
               },
               width = 0.95,
               height = 0.85,
@@ -424,6 +443,9 @@ else
         vim.keymap.set('n', '<leader>sa', function()
           builtin.find_files { hidden = true, no_ignore = true }
         end, { desc = '[S]earch [A]ll Files (including hidden)' })
+        vim.keymap.set('n', '<leader>sq', function()
+          builtin.git_files { previewer = false }
+        end, { desc = '[S]earch [Q]uick git files (no preview)' })
         vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
         vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
         vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
