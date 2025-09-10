@@ -359,10 +359,25 @@ else
           --
           defaults = {
             path_display = { 'smart' },
-            file_ignore_patterns = { 
-              'node_modules/', '^.git/', '^%.cache/', '__pycache__', '.sst/', '^dist/',
-              'logs/', '%.log$', '%.tmp$', '.next/', '.turbo/', 'coverage/', 'build/', 'out/',
-              '%.pnpm/', 'pnpm%-lock%.yaml$', '%.DS_Store$', 'sst%-env%.d%.ts$'
+            file_ignore_patterns = {
+              'node_modules/',
+              '^.git/',
+              '^%.cache/',
+              '__pycache__',
+              '.sst/',
+              '^dist/',
+              'logs/',
+              '%.log$',
+              '%.tmp$',
+              '.next/',
+              '.turbo/',
+              'coverage/',
+              'build/',
+              'out/',
+              '%.pnpm/',
+              'pnpm%-lock%.yaml$',
+              '%.DS_Store$',
+              'sst%-env%.d%.ts$',
             },
             -- Performance optimizations
             vimgrep_arguments = {
@@ -376,8 +391,14 @@ else
               '--hidden',
               '--glob=!.git/',
             },
-            find_command = vim.fn.executable('fd') == 1 and { 
-              'fd', '--type', 'f', '--hidden', '--follow', '--exclude', '.git'
+            find_command = vim.fn.executable 'fd' == 1 and {
+              'fd',
+              '--type',
+              'f',
+              '--hidden',
+              '--follow',
+              '--exclude',
+              '.git',
             } or nil,
             dynamic_preview_title = true,
             layout_strategy = 'horizontal',
