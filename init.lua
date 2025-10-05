@@ -118,7 +118,9 @@ else
 
   -- Diagnostic keymaps
   vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open [d]iagnostic [Q]uickfix list' })
-  vim.keymap.set('n', '<leader>dp', vim.diagnostic.open_float, { desc = 'Open [d]iagnostic [P]review window' })
+  vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float, { desc = 'Open [d]iagnostic [f]loat window' })
+  vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next, { desc = '[D]iagnostic [n]ext' })
+  vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev, { desc = '[D]iagnostic [p]revious' })
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
