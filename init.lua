@@ -547,6 +547,7 @@ else
           end,
         })
 
+
         -- Change diagnostic symbols in the sign column (gutter)
         -- if vim.g.have_nerd_font then
         --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
@@ -605,6 +606,12 @@ else
               'typescript.tsx',
               'typescriptreact',
               'vue',
+            },
+            settings = {
+              biome = {
+                config_path = './biome.json',
+                require_config_file = true,
+              },
             },
           },
 
@@ -689,11 +696,12 @@ else
         end,
         formatters_by_ft = {
           lua = { 'stylua' },
-          javascript = { 'biome' },
-          javascriptreact = { 'biome' },
-          typescript = { 'biome' },
-          typescriptreact = { 'biome' },
-          json = { 'biome' },
+          javascript = { 'biome-check' },
+          javascriptreact = { 'biome-check' },
+          typescript = { 'biome-check' },
+          typescriptreact = { 'biome-check' },
+          json = { 'biome-check' },
+          css = { 'biome-check' },
           -- Conform can also run multiple formatters sequentially
           -- python = { "isort", "black" },
           --
