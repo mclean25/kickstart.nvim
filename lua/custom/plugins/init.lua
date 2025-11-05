@@ -356,10 +356,9 @@ return {
   {
     dir = vim.fn.stdpath 'config' .. '/nvim-file-history',
     name = 'file-history-dev',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
+    dependencies = { 'ibhagwan/fzf-lua' },
     config = function()
       local file_history = require 'nvim-file-history'
-      local telescope_integration = require 'nvim-file-history.telescope'
 
       file_history.setup {
         max_history_size = 100,
@@ -374,18 +373,62 @@ return {
           'help',
           'NvimTree',
           'neo-tree',
-          'telescope',
+          'fzf',
           'lazy',
           'mason',
           'oil',
         },
       }
 
-      -- Keybindings for file history
-      vim.keymap.set('n', '<leader>b', telescope_integration.file_history_picker, { desc = 'File [B]ack history' })
+      -- Keybindings for file history using fzf-lua
+      vim.keymap.set('n', '<leader>b', function()
+        local fzf = require 'fzf-lua'
+        local history = file_history.get_history()
+        if #history == 0 then
+          vim.notify('No file history', vim.log.levels.INFO)
+          return
+        end
+        -- Extract just the filepaths from history
+        local filepaths = {}
+        for _, entry in ipairs(history) do
+          table.insert(filepaths, entry.filepath)
+        end
+        fzf.fzf_exec(filepaths, {
+          prompt = 'File History> ',
+          actions = {
+            ['default'] = function(selected)
+              if selected then
+                vim.cmd('edit ' .. vim.fn.fnameescape(selected[1]))
+              end
+            end,
+          },
+        })
+      end, { desc = 'File [B]ack history' })
 
       -- Commands
-      vim.api.nvim_create_user_command('FileHistory', telescope_integration.file_history_picker, {})
+      vim.api.nvim_create_user_command('FileHistory', function()
+        local fzf = require 'fzf-lua'
+        local history = file_history.get_history()
+        if #history == 0 then
+          vim.notify('No file history', vim.log.levels.INFO)
+          return
+        end
+        -- Extract just the filepaths from history
+        local filepaths = {}
+        for _, entry in ipairs(history) do
+          table.insert(filepaths, entry.filepath)
+        end
+        fzf.fzf_exec(filepaths, {
+          prompt = 'File History> ',
+          actions = {
+            ['default'] = function(selected)
+              if selected then
+                vim.cmd('edit ' .. vim.fn.fnameescape(selected[1]))
+              end
+            end,
+          },
+        })
+      end, {})
     end,
   },
 }
