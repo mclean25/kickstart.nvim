@@ -339,6 +339,11 @@ else
               horizontal = 'right:50%',
             },
           },
+          keymap = {
+            fzf = {
+              ['ctrl-q'] = 'select-all+accept',
+            },
+          },
         }
 
         -- Setting up harpoon to work with fzf-lua
