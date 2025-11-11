@@ -701,17 +701,24 @@ else
         end,
         formatters_by_ft = {
           lua = { 'stylua' },
-          javascript = { 'biome-check' },
-          javascriptreact = { 'biome-check' },
-          typescript = { 'biome-check' },
-          typescriptreact = { 'biome-check' },
-          json = { 'biome-check' },
-          css = { 'biome-check' },
+          javascript = { 'biome' },
+          javascriptreact = { 'biome' },
+          typescript = { 'biome' },
+          typescriptreact = { 'biome' },
+          json = { 'biome' },
+          css = { 'biome' },
           -- Conform can also run multiple formatters sequentially
           -- python = { "isort", "black" },
           --
           -- You can use 'stop_after_first' to run the first available formatter from the list
           -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        },
+        formatters = {
+          biome = {
+            command = 'biome',
+            args = { 'check', '--write', '--unsafe', '--stdin-file-path', '$FILENAME' },
+            stdin = true,
+          },
         },
       },
     },
