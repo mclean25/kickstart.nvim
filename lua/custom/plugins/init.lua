@@ -14,7 +14,11 @@ return {
   -- Dressing
   {
     'stevearc/dressing.nvim',
-    opts = {},
+    opts = {
+      select = {
+        backend = { 'fzf_lua', 'builtin' },
+      },
+    },
   },
   -- Lualine
   {
