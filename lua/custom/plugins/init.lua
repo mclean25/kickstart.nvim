@@ -117,6 +117,22 @@ return {
           --   },
           -- },
         },
+        winbar = {
+          lualine_c = {
+            {
+              'filename',
+              path = 1, -- 0 = just filename, 1 = relative path, 2 = absolute path
+            },
+          },
+        },
+        inactive_winbar = {
+          lualine_c = {
+            {
+              'filename',
+              path = 1,
+            },
+          },
+        },
       }
     end,
   },
