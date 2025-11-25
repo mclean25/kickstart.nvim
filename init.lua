@@ -112,6 +112,99 @@ else
     vim.notify('Copied relative path: ' .. relative_path)
   end, { desc = '[Y]ank [f]ilename relative to pwd' })
 
+  -- Create biome.json with default config
+  vim.api.nvim_create_user_command('BiomeInit', function()
+    local biome_config = [[{
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/.nvmrc",
+      "!.vscode/",
+      "!**/.sst",
+      "!**/_templates",
+      "!**/cache",
+      "!**/cikMappings.json",
+      "!**/migrations/meta",
+      "!**/sst-env.d.ts",
+      "!packages/**/dist",
+      "!packages/core/db/migrations",
+      "!packages/core/modelling/summary/formula/parser.ts",
+      "!packages/core/modelling/summary/formula/parser.terms.ts",
+      "!packages/domain/integration/**/__snapshot.json",
+      "!packages/domain/integration/**/data",
+      "!packages/domain/modelling/testData/**/*.json",
+      "!packages/domain/integration/**/*.json",
+      "!**/__snapshots__/**/*.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 88,
+    "attributePosition": "auto"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "useKeyWithClickEvents": "off",
+        "useValidAnchor": "off",
+        "noSvgWithoutTitle": "off",
+        "noStaticElementInteractions": "off",
+        "useSemanticElements": "off"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "noStaticOnlyClass": "off",
+        "useFlatMap": "off",
+        "noImportantStyles": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn",
+        "noUnsafeOptionalChaining": "off",
+        "useExhaustiveDependencies": "off",
+        "noUnknownTypeSelector": "off"
+      },
+      "style": {
+        "useImportType": "off",
+        "noUselessElse": "off",
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "off",
+        "useLiteralEnumMembers": "off",
+        "noDescendingSpecificity": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noPrototypeBuiltins": "off",
+        "noAssignInExpressions": "off",
+        "noArrayIndexKey": "off",
+        "noUnknownAtRules": "off",
+        "noTsIgnore": "off"
+      }
+    }
+  }
+}
+]]
+    local file = io.open('biome.json', 'w')
+    if file then
+      file:write(biome_config)
+      file:close()
+      vim.notify('Created biome.json in ' .. vim.fn.getcwd())
+    else
+      vim.notify('Failed to create biome.json', vim.log.levels.ERROR)
+    end
+  end, { desc = 'Create biome.json with default config' })
+
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
   vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -715,9 +808,16 @@ else
         },
         formatters = {
           biome = {
-            command = 'biome',
-            args = { 'check', '--write', '--unsafe', '--stdin-file-path', '$FILENAME' },
-            stdin = true,
+            command = function()
+              -- Prefer local node_modules biome, fall back to global
+              local local_biome = vim.fn.getcwd() .. '/node_modules/.bin/biome'
+              if vim.fn.executable(local_biome) == 1 then
+                return local_biome
+              end
+              return 'biome' -- Falls back to global biome in PATH
+            end,
+            args = { 'check', '--write', '--unsafe', '$FILENAME' },
+            stdin = false,
           },
         },
       },
