@@ -645,7 +645,6 @@ else
           end,
         })
 
-
         -- Change diagnostic symbols in the sign column (gutter)
         -- if vim.g.have_nerd_font then
         --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
@@ -816,7 +815,7 @@ else
               end
               return 'biome' -- Falls back to global biome in PATH
             end,
-            args = { 'check', '--write', '--unsafe', '$FILENAME' },
+            args = { 'check', '--write', '$FILENAME' },
             stdin = false,
           },
         },
