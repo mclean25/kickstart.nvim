@@ -312,11 +312,12 @@ else
           delay = 0,
         },
       },
-      config = function(_, opts)
-        require('gitsigns').setup(opts)
-        require('scrollbar.handlers.gitsigns').setup()
-        vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<CR>', {})
-      end,
+       config = function(_, opts)
+         require('gitsigns').setup(opts)
+         require('scrollbar.handlers.gitsigns').setup()
+         vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<CR>', {})
+         vim.keymap.set('n', '<leader>go', require('custom.github_opener').open_commit_in_github, { desc = 'Open commit in GitHub' })
+       end,
     },
 
     -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
