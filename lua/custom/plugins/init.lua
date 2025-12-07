@@ -282,7 +282,7 @@ return {
       }
 
       -- Custom scroll speed for <C-u> and <C-d>
-      local neoscroll = require('neoscroll')
+      local neoscroll = require 'neoscroll'
       vim.keymap.set('n', '<C-u>', function()
         neoscroll.scroll(-vim.wo.scroll, { move_cursor = true, duration = 110 })
       end)
@@ -449,6 +449,13 @@ return {
           },
         })
       end, {})
+    end,
+  },
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
+      vim.keymap.set('n',             'S', '<Plug>(leap-from-window)')
     end,
   },
 }
