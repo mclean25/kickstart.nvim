@@ -23,6 +23,104 @@ return {
   -- DiffView
   {
     'sindrets/diffview.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('diffview').setup {}
+
+      local function git_root(path)
+        local cmd = string.format('git -C %s rev-parse --show-toplevel', vim.fn.shellescape(path))
+        local result = vim.fn.systemlist(cmd)
+        if vim.v.shell_error ~= 0 or not result[1] then
+          return nil
+        end
+        return vim.fn.trim(result[1])
+      end
+
+      local function open_line_commit()
+        local file = vim.api.nvim_buf_get_name(0)
+        if file == '' then
+          vim.notify('Buffer has no file', vim.log.levels.ERROR)
+          return
+        end
+
+        local file_real = vim.loop.fs_realpath(file) or file
+        local dir = vim.fn.fnamemodify(file_real, ':h')
+        local root = git_root(dir)
+        if not root then
+          vim.notify('Not inside a git repository', vim.log.levels.ERROR)
+          return
+        end
+
+        local relpath = vim.fs.relpath(file_real, root)
+        if not relpath then
+          local ls_cmd = string.format('git -C %s ls-files --full-name -- %s', vim.fn.shellescape(root), vim.fn.shellescape(file_real))
+          local ls = vim.fn.systemlist(ls_cmd)
+          if vim.v.shell_error == 0 and ls[1] and ls[1] ~= '' then
+            relpath = vim.fn.trim(ls[1])
+          else
+            local prefix = root .. '/'
+            if vim.startswith(file_real, prefix) then
+              relpath = file_real:sub(#prefix + 1)
+            end
+          end
+        end
+        if not relpath then
+          vim.notify('Cannot resolve file path in git repo', vim.log.levels.ERROR)
+          return
+        end
+
+        local line = vim.api.nvim_win_get_cursor(0)[1]
+        local blame_cmd = table.concat({
+          'git -C',
+          vim.fn.shellescape(root),
+          'blame -L',
+          line .. ',' .. line,
+          '--porcelain --',
+          vim.fn.shellescape(relpath),
+        }, ' ')
+        local blame = vim.fn.systemlist(blame_cmd)
+        if vim.v.shell_error ~= 0 or not blame[1] then
+          vim.notify('Unable to find blame info for line', vim.log.levels.ERROR)
+          return
+        end
+
+        local commit = blame[1]:match('^%s*([%w^]+)')
+        if not commit or commit == '' then
+          vim.notify('Unexpected blame output', vim.log.levels.ERROR)
+          return
+        end
+
+        commit = commit:gsub('^%^', '')
+        if commit == '' then
+          vim.notify('No commit information for line', vim.log.levels.ERROR)
+          return
+        end
+
+        if commit:match('^0+$') then
+          vim.cmd(string.format('DiffviewOpen HEAD -- %s', vim.fn.fnameescape(relpath)))
+          return
+        end
+
+        if not commit:match('^%x+$') then
+          vim.notify('Unexpected blame output', vim.log.levels.ERROR)
+          return
+        end
+
+        local parent_check_cmd = string.format('git -C %s rev-parse --verify %s^', vim.fn.shellescape(root), commit)
+        vim.fn.system(parent_check_cmd)
+
+        local rev
+        if vim.v.shell_error == 0 then
+          rev = string.format('%s^..%s', commit, commit)
+        else
+          rev = commit
+        end
+
+        vim.cmd(string.format('DiffviewOpen %s -- %s', rev, vim.fn.fnameescape(relpath)))
+      end
+
+      vim.keymap.set('n', '<leader>gD', open_line_commit, { desc = 'Diffview last commit for line' })
+    end,
   },
   -- Lualine
   {
