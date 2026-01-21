@@ -20,6 +20,10 @@ return {
       },
     },
   },
+  -- DiffView
+  {
+    'sindrets/diffview.nvim',
+  },
   -- Lualine
   {
     'nvim-lualine/lualine.nvim',
@@ -194,6 +198,7 @@ return {
     vim.keymap.set('n', '<leader>ex', '<CMD>Neotree action=show source=filesystem position=left toggle=true<CR>', { desc = 'Toggle Neo-tree' }),
     opts = {
       close_if_last_window = true,
+      show = true,
       filesystem = {
         follow_current_file = {
           enabled = true,
@@ -454,8 +459,8 @@ return {
   {
     'ggandor/leap.nvim',
     config = function()
-      vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
-      vim.keymap.set('n',             'S', '<Plug>(leap-from-window)')
+      vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
+      vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
     end,
   },
 }
