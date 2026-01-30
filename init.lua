@@ -1029,6 +1029,13 @@ else
       vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'Visual' })
       vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'Visual' })
       vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'Visual' })
+
+      -- GitSigns gutter symbols: colored background to make them pop
+      vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#9ece6a', bg = '#1a2e1a' })
+      vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#7aa2f7', bg = '#1a1a2e' })
+      vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#f7768e', bg = '#2e1a1a' })
+      vim.api.nvim_set_hl(0, 'GitSignsTopdelete', { fg = '#f7768e', bg = '#2e1a1a' })
+      vim.api.nvim_set_hl(0, 'GitSignsChangedelete', { fg = '#7aa2f7', bg = '#1a1a2e' })
     end,
   })
 
@@ -1037,5 +1044,11 @@ else
     vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'Visual' })
     vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'Visual' })
     vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'Visual' })
+
+    vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#9ece6a', bg = '#1a2e1a' })
+    vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#7aa2f7', bg = '#1a1a2e' })
+    vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#f7768e', bg = '#2e1a1a' })
+    vim.api.nvim_set_hl(0, 'GitSignsTopdelete', { fg = '#f7768e', bg = '#2e1a1a' })
+    vim.api.nvim_set_hl(0, 'GitSignsChangedelete', { fg = '#7aa2f7', bg = '#1a1a2e' })
   end, 100)
 end
