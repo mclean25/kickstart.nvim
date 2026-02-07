@@ -84,7 +84,7 @@ return {
           return
         end
 
-        local commit = blame[1]:match('^%s*([%w^]+)')
+        local commit = blame[1]:match '^%s*([%w^]+)'
         if not commit or commit == '' then
           vim.notify('Unexpected blame output', vim.log.levels.ERROR)
           return
@@ -96,12 +96,12 @@ return {
           return
         end
 
-        if commit:match('^0+$') then
+        if commit:match '^0+$' then
           vim.cmd(string.format('DiffviewOpen HEAD -- %s', vim.fn.fnameescape(relpath)))
           return
         end
 
-        if not commit:match('^%x+$') then
+        if not commit:match '^%x+$' then
           vim.notify('Unexpected blame output', vim.log.levels.ERROR)
           return
         end
@@ -559,6 +559,14 @@ return {
     config = function()
       vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
       vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
+    end,
+  },
+  {
+    'dmmulroy/tsc.nvim',
+    config = function()
+      require('tsc').setup {
+        run_as_monorepo = true, -- Your config here
+      }
     end,
   },
 }
