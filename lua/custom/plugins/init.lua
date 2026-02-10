@@ -119,9 +119,15 @@ return {
         vim.cmd(string.format('DiffviewOpen %s -- %s', rev, vim.fn.fnameescape(relpath)))
       end
 
-      vim.keymap.set('n', '<leader>gD', open_line_commit, { desc = 'Diffview last commit for line' })
-    end,
-  },
+       vim.keymap.set('n', '<leader>gD', open_line_commit, { desc = 'Diffview last commit for line' })
+
+       -- Diffview keymaps
+       vim.keymap.set('n', '<leader>do', '<cmd>DiffviewOpen<cr>', { desc = 'Open Diffview' })
+       vim.keymap.set('n', '<leader>dc', '<cmd>DiffviewClose<cr>', { desc = 'Close Diffview' })
+       vim.keymap.set('n', '<leader>dfh', '<cmd>DiffviewFileHistory %<cr>', { desc = 'File history for current file' })
+       vim.keymap.set('n', '<leader>dh', '<cmd>DiffviewFileHistory<cr>', { desc = 'File history for branch' })
+     end,
+   },
   -- Lualine
   {
     'nvim-lualine/lualine.nvim',
