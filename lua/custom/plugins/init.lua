@@ -374,33 +374,6 @@ return {
       },
     },
   },
-  -- Disabling because it doesnt' play nice with the scrollbar
-  {
-    'karb94/neoscroll.nvim',
-    config = function()
-      require('neoscroll').setup {
-        mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', 'zt', 'zz', 'zb' },
-        hide_cursor = true,
-        stop_eof = true,
-        respect_scrolloff = false,
-        cursor_scrolls_alone = true,
-        easing_function = 'quadratic',
-        pre_hook = nil,
-        post_hook = nil,
-        performance_mode = false,
-        ignored_events = { 'CursorMoved' }, -- Allow WinScrolled for scrollbar updates
-      }
-
-      -- Custom scroll speed for <C-u> and <C-d>
-      local neoscroll = require 'neoscroll'
-      vim.keymap.set('n', '<C-u>', function()
-        neoscroll.scroll(-vim.wo.scroll, { move_cursor = true, duration = 110 })
-      end)
-      vim.keymap.set('n', '<C-d>', function()
-        neoscroll.scroll(vim.wo.scroll, { move_cursor = true, duration = 110 })
-      end)
-    end,
-  },
   {
     'nvim-neotest/neotest',
     dependencies = {
