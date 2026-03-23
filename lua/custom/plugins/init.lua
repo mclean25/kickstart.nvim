@@ -16,7 +16,7 @@ return {
     'stevearc/dressing.nvim',
     opts = {
       select = {
-        backend = { 'fzf_lua', 'builtin' },
+        backend = { 'builtin' },
       },
     },
   },
@@ -483,54 +483,33 @@ return {
         },
       }
 
-      -- Keybindings for file history using fzf-lua
-      vim.keymap.set('n', '<leader>b', function()
-        local fzf = require 'fzf-lua'
+      local function pick_file_history()
         local history = file_history.get_history()
         if #history == 0 then
           vim.notify('No file history', vim.log.levels.INFO)
           return
         end
-        -- Extract just the filepaths from history
-        local filepaths = {}
-        for _, entry in ipairs(history) do
-          table.insert(filepaths, entry.filepath)
-        end
-        fzf.fzf_exec(filepaths, {
-          prompt = 'File History> ',
-          actions = {
-            ['default'] = function(selected)
-              if selected then
-                vim.cmd('edit ' .. vim.fn.fnameescape(selected[1]))
-              end
-            end,
-          },
-        })
+
+        vim.ui.select(history, {
+          prompt = 'File History',
+          format_item = function(item)
+            return vim.fn.fnamemodify(item.filepath, ':~:.')
+          end,
+        }, function(choice)
+          if choice then
+            vim.cmd('edit ' .. vim.fn.fnameescape(choice.filepath))
+          end
+        end)
+      end
+
+      -- Keybindings for file history
+      vim.keymap.set('n', '<leader>b', function()
+        pick_file_history()
       end, { desc = 'File [B]ack history' })
 
       -- Commands
       vim.api.nvim_create_user_command('FileHistory', function()
-        local fzf = require 'fzf-lua'
-        local history = file_history.get_history()
-        if #history == 0 then
-          vim.notify('No file history', vim.log.levels.INFO)
-          return
-        end
-        -- Extract just the filepaths from history
-        local filepaths = {}
-        for _, entry in ipairs(history) do
-          table.insert(filepaths, entry.filepath)
-        end
-        fzf.fzf_exec(filepaths, {
-          prompt = 'File History> ',
-          actions = {
-            ['default'] = function(selected)
-              if selected then
-                vim.cmd('edit ' .. vim.fn.fnameescape(selected[1]))
-              end
-            end,
-          },
-        })
+        pick_file_history()
       end, {})
     end,
   },

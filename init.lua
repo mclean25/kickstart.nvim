@@ -402,46 +402,9 @@ else
       'ThePrimeagen/harpoon',
       branch = 'harpoon2',
       dependencies = { 'nvim-lua/plenary.nvim' },
-    },
-    { -- Fuzzy Finder (files, lsp, etc)
-      'ibhagwan/fzf-lua',
-      event = 'VimEnter',
-      dependencies = {
-        'nvim-tree/nvim-web-devicons',
-      },
       config = function()
-        -- [[ Configure fzf-lua ]]
-        local fzf = require 'fzf-lua'
-
-        fzf.setup {
-          defaults = {
-            file_icons = vim.g.have_nerd_font,
-            git_icons = vim.g.have_nerd_font,
-          },
-          files = {
-            cmd = vim.fn.executable 'fd' == 1 and 'fd --type f --hidden --follow --exclude .git' or 'find . -type f',
-            actions = {
-              ['default'] = fzf.actions.file_edit,
-            },
-          },
-          grep = {
-            rg_opts = '--color=never --no-heading --with-filename --line-number --column --smart-case --hidden --glob=!.git/',
-          },
-          winopts = {
-            preview = {
-              layout = 'horizontal',
-              horizontal = 'right:50%',
-            },
-          },
-          keymap = {
-            fzf = {
-              ['ctrl-q'] = 'select-all+accept',
-            },
-          },
-        }
-
-        -- Setting up harpoon to work with fzf-lua
         local harpoon = require 'harpoon'
+
         harpoon:setup {}
 
         vim.keymap.set('n', '<leader>ha', function()
@@ -462,36 +425,240 @@ else
         vim.keymap.set('n', '<leader>4', function()
           harpoon:list():select(4)
         end, { desc = 'Select harpoon 4' })
-
         vim.keymap.set('n', '<C-S-P>', function()
           harpoon:list():prev()
         end, { desc = 'Previous harpoon' })
         vim.keymap.set('n', '<C-S-N>', function()
           harpoon:list():next()
         end, { desc = 'Next harpoon' })
+      end,
+    },
+    {
+      'dmtrKovalenko/fff.nvim',
+      lazy = false,
+      build = function()
+        require('fff.download').download_or_build_binary()
+      end,
+      dependencies = {
+        'nvim-tree/nvim-web-devicons',
+      },
+      config = function()
+        local fff = require 'fff'
+        local client_app = vim.fn.expand '~/dev/client-app'
 
-        -- fzf-lua keybindings (same keys as before for consistency)
-        vim.keymap.set('n', '<leader>sh', fzf.builtin, { desc = '[S]earch [H]elp' })
-        vim.keymap.set('n', '<leader>sk', fzf.keymaps, { desc = '[S]earch [K]eymaps' })
-        vim.keymap.set('n', '<leader>sf', fzf.files, { desc = '[S]earch [F]iles' })
-        vim.keymap.set('n', '<leader>sa', function()
-          fzf.files { fd_opts = 'fd --type f --hidden --follow' }
-        end, { desc = '[S]earch [A]ll Files (including hidden)' })
-        vim.keymap.set('n', '<leader>sq', fzf.git_files, { desc = '[S]earch [Q]uick git files' })
-        vim.keymap.set('n', '<leader>ss', fzf.builtin, { desc = '[S]earch [S]elect fzf' })
-        vim.keymap.set('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch current [W]ord' })
-        vim.keymap.set('n', '<leader>sg', fzf.live_grep, { desc = '[S]earch by [G]rep' })
-        vim.keymap.set('n', '<leader>sd', fzf.diagnostics_document, { desc = '[S]earch [D]iagnostics' })
-        vim.keymap.set('n', '<leader>sr', fzf.resume, { desc = '[S]earch [R]esume' })
-        vim.keymap.set('n', '<leader>s.', fzf.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-        vim.keymap.set('n', '<leader><leader>', fzf.buffers, { desc = '[ ] Find existing buffers' })
-        vim.keymap.set('n', '<leader>/', fzf.blines, { desc = '[/] Fuzzily search in current buffer' })
-        vim.keymap.set('n', '<leader>s/', function()
-          fzf.live_grep { buffer_local = true }
-        end, { desc = '[S]earch [/] in Open Files' })
+        local function select_from_items(items, opts)
+          vim.ui.select(items, opts, function(choice)
+            if choice and opts.on_choice then opts.on_choice(choice) end
+          end)
+        end
+
+        local function prompt_search_current_buffer()
+          vim.ui.input({ prompt = 'Search current buffer: ' }, function(input)
+            if not input or input == '' then
+              return
+            end
+
+            vim.fn.setreg('/', input)
+            vim.o.hlsearch = true
+            vim.cmd 'normal! n'
+          end)
+        end
+
+        local function pick_recent_files()
+          local items = {}
+          for _, file in ipairs(vim.v.oldfiles or {}) do
+            if file ~= '' and vim.fn.filereadable(file) == 1 then
+              table.insert(items, file)
+            end
+          end
+
+          select_from_items(items, {
+            prompt = 'Recent files',
+            format_item = function(item)
+              return vim.fn.fnamemodify(item, ':~:.')
+            end,
+            on_choice = function(choice)
+              vim.cmd.edit(vim.fn.fnameescape(choice))
+            end,
+          })
+        end
+
+        local function pick_buffers()
+          local items = {}
+          for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].buflisted then
+              local name = vim.api.nvim_buf_get_name(bufnr)
+              table.insert(items, {
+                bufnr = bufnr,
+                name = name ~= '' and name or '[No Name]',
+              })
+            end
+          end
+
+          select_from_items(items, {
+            prompt = 'Buffers',
+            format_item = function(item)
+              return string.format('%d: %s', item.bufnr, vim.fn.fnamemodify(item.name, ':~:.'))
+            end,
+            on_choice = function(choice)
+              vim.api.nvim_set_current_buf(choice.bufnr)
+            end,
+          })
+        end
+
+        local function pick_keymaps()
+          local items = {}
+          for _, mode in ipairs { 'n', 'x' } do
+            for _, map in ipairs(vim.api.nvim_get_keymap(mode)) do
+              if map.lhs and map.desc and map.desc ~= '' then
+                table.insert(items, {
+                  mode = mode,
+                  lhs = map.lhs,
+                  desc = map.desc,
+                })
+              end
+            end
+          end
+
+          table.sort(items, function(a, b)
+            return a.lhs < b.lhs
+          end)
+
+          select_from_items(items, {
+            prompt = 'Keymaps',
+            format_item = function(item)
+              return string.format('[%s] %s - %s', item.mode, item.lhs, item.desc)
+            end,
+            on_choice = function(choice)
+              vim.notify(string.format('%s (%s): %s', choice.lhs, choice.mode, choice.desc), vim.log.levels.INFO)
+            end,
+          })
+        end
+
+        local function pick_search_action()
+          select_from_items({
+            { label = 'Files', action = fff.find_files },
+            { label = 'Live grep', action = fff.live_grep },
+            {
+              label = 'Current word',
+              action = function()
+                fff.live_grep { query = vim.fn.expand '<cword>' }
+              end,
+            },
+            {
+              label = 'Client app files',
+              action = function()
+                fff.find_files_in_dir(client_app)
+              end,
+            },
+            {
+              label = 'Neovim config files',
+              action = function()
+                fff.find_files_in_dir(vim.fn.stdpath 'config')
+              end,
+            },
+          }, {
+            prompt = 'Search',
+            format_item = function(item)
+              return item.label
+            end,
+            on_choice = function(choice)
+              choice.action()
+            end,
+          })
+        end
+
+        local function prompt_help()
+          vim.ui.input({ prompt = 'Help topic: ' }, function(input)
+            if input and input ~= '' then
+              vim.cmd.help(input)
+            end
+          end)
+        end
+
+        local function prompt_workspace_symbol()
+          vim.ui.input({ prompt = 'Workspace symbol: ', default = vim.fn.expand '<cword>' }, function(input)
+            if input and input ~= '' then
+              vim.lsp.buf.workspace_symbol(input)
+            end
+          end)
+        end
+
+        fff.setup {
+          prompt = '> ',
+          title = 'FFF Files',
+        }
+
+        vim.keymap.set('n', '<leader>sh', prompt_help, { desc = '[S]earch [H]elp' })
+        vim.keymap.set('n', '<leader>sk', pick_keymaps, { desc = '[S]earch [K]eymaps' })
+        vim.keymap.set('n', '<leader>sf', fff.find_files, { desc = '[S]earch [F]iles' })
+        vim.keymap.set('n', '<leader>ss', pick_search_action, { desc = '[S]earch [S]elect search' })
+        vim.keymap.set('n', '<leader>sw', function()
+          fff.live_grep { query = vim.fn.expand '<cword>' }
+        end, { desc = '[S]earch current [W]ord' })
+        vim.keymap.set('n', '<leader>sg', fff.live_grep, { desc = '[S]earch by [G]rep' })
+        vim.keymap.set('n', '<leader>sc', function()
+          fff.find_files_in_dir(client_app)
+        end, { desc = '[S]earch [C]lient app files' })
+        vim.keymap.set('n', '<leader>sd', vim.diagnostic.setloclist, { desc = '[S]earch [D]iagnostics' })
+        vim.keymap.set('n', '<leader>sr', fff.refresh_git_status, { desc = '[S]earch [R]efresh git status' })
+        vim.keymap.set('n', '<leader>s.', pick_recent_files, { desc = '[S]earch Recent Files' })
+        vim.keymap.set('n', '<leader><leader>', pick_buffers, { desc = '[ ] Find existing buffers' })
+        vim.keymap.set('n', '<leader>/', prompt_search_current_buffer, { desc = '[/] Search in current buffer' })
+        vim.keymap.set('n', '<leader>s/', prompt_search_current_buffer, { desc = '[S]earch [/] in current buffer' })
         vim.keymap.set('n', '<leader>sn', function()
-          fzf.files { cwd = vim.fn.stdpath 'config' }
+          fff.find_files_in_dir(vim.fn.stdpath 'config')
         end, { desc = '[S]earch [N]eovim files' })
+
+        vim.api.nvim_create_autocmd('LspAttach', {
+          group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+          callback = function(event)
+            local map = function(keys, func, desc, mode)
+              mode = mode or 'n'
+              vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+            end
+
+            map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+            map('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+            map('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+            map('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+            map('<leader>ds', vim.lsp.buf.document_symbol, '[D]ocument [S]ymbols')
+            map('<leader>ws', prompt_workspace_symbol, '[W]orkspace [S]ymbols')
+            map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+            map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+            map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+            local client = vim.lsp.get_client_by_id(event.data.client_id)
+            if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+              local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+              vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+                buffer = event.buf,
+                group = highlight_augroup,
+                callback = vim.lsp.buf.document_highlight,
+              })
+
+              vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+                buffer = event.buf,
+                group = highlight_augroup,
+                callback = vim.lsp.buf.clear_references,
+              })
+
+              vim.api.nvim_create_autocmd('LspDetach', {
+                group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+                callback = function(event2)
+                  vim.lsp.buf.clear_references()
+                  vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                end,
+              })
+            end
+
+            if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+              map('<leader>th', function()
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+              end, '[T]oggle Inlay [H]ints')
+            end
+          end,
+        })
       end,
     },
 
@@ -550,101 +717,6 @@ else
         --
         -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
         -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
-        --  This function gets run when an LSP attaches to a particular buffer.
-        --    That is to say, every time a new file is opened that is associated with
-        --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-        --    function will be executed to configure the current buffer
-        vim.api.nvim_create_autocmd('LspAttach', {
-          group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
-          callback = function(event)
-            -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-            -- to define small helper and utility functions so you don't have to repeat yourself.
-            --
-            -- In this case, we create a function that lets us more easily define mappings specific
-            -- for LSP related items. It sets the mode, buffer and description for us each time.
-            local map = function(keys, func, desc, mode)
-              mode = mode or 'n'
-              vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-            end
-
-            -- Jump to the definition of the word under your cursor.
-            --  This is where a variable was first declared, or where a function is defined, etc.
-            --  To jump back, press <C-t>.
-            map('gd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
-
-            -- Find references for the word under your cursor.
-            map('gr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
-
-            -- Jump to the implementation of the word under your cursor.
-            --  Useful when your language has ways of declaring types without an actual implementation.
-            map('gI', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
-
-            -- Jump to the type of the word under your cursor.
-            --  Useful when you're not sure what type a variable is and you want to see
-            --  the definition of its *type*, not where it was *defined*.
-            map('<leader>D', require('fzf-lua').lsp_typedefs, 'Type [D]efinition')
-
-            -- Fuzzy find all the symbols in your current document.
-            --  Symbols are things like variables, functions, types, etc.
-            map('<leader>ds', require('fzf-lua').lsp_document_symbols, '[D]ocument [S]ymbols')
-
-            -- Fuzzy find all the symbols in your current workspace.
-            --  Similar to document symbols, except searches over your entire project.
-            map('<leader>ws', require('fzf-lua').lsp_workspace_symbols, '[W]orkspace [S]ymbols')
-
-            -- Rename the variable under your cursor.
-            --  Most Language Servers support renaming across files, etc.
-            map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-            -- Execute a code action, usually your cursor needs to be on top of an error
-            -- or a suggestion from your LSP for this to activate.
-            map('<leader>ca', require('fzf-lua').lsp_code_actions, '[C]ode [A]ction', { 'n', 'x' })
-
-            -- WARN: This is not Goto Definition, this is Goto Declaration.
-            --  For example, in C this would take you to the header.
-            map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-            -- The following two autocommands are used to highlight references of the
-            -- word under your cursor when your cursor rests there for a little while.
-            --    See `:help CursorHold` for information about when this is executed
-            --
-            -- When you move your cursor, the highlights will be cleared (the second autocommand).
-            local client = vim.lsp.get_client_by_id(event.data.client_id)
-            if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-              local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-              vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-                buffer = event.buf,
-                group = highlight_augroup,
-                callback = vim.lsp.buf.document_highlight,
-              })
-
-              vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-                buffer = event.buf,
-                group = highlight_augroup,
-                callback = vim.lsp.buf.clear_references,
-              })
-
-              vim.api.nvim_create_autocmd('LspDetach', {
-                group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-                callback = function(event2)
-                  vim.lsp.buf.clear_references()
-                  vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-                end,
-              })
-            end
-
-            -- The following code creates a keymap to toggle inlay hints in your
-            -- code, if the language server you are using supports them
-            --
-            -- This may be unwanted, since they displace some of your code
-            if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-              map('<leader>th', function()
-                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-              end, '[T]oggle Inlay [H]ints')
-            end
-          end,
-        })
 
         -- Change diagnostic symbols in the sign column (gutter)
         -- if vim.g.have_nerd_font then
