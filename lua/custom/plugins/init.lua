@@ -545,6 +545,7 @@ return {
     'dmmulroy/tsc.nvim',
     config = function()
       require('tsc').setup {
+        bin_name = 'tsgo',
         run_as_monorepo = true, -- Your config here
       }
     end,
