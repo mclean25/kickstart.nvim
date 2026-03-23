@@ -6,7 +6,7 @@ else
   -- See `:help mapleader`
   --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
   vim.g.mapleader = ' '
-  vim.g.maplocalleader = ' '
+  vim.g.maplocalleader = ','
 
   -- vim.o.background = 'light' -- or "light" for light mode
   -- vim.cmd [[colorscheme gruvbox]]
@@ -705,12 +705,16 @@ else
               'typescriptreact',
               'vue',
             },
-            settings = {
-              biome = {
-                config_path = './biome.json',
-                require_config_file = true,
-              },
-            },
+            root_dir = function(fname)
+              local util = require('lspconfig.util')
+              -- First try to find a local biome.json
+              local local_root = util.root_pattern('biome.json', 'biome.jsonc')(fname)
+              if local_root then
+                return local_root
+              end
+              -- Fall back to home directory for global config
+              return vim.fn.expand('~')
+            end,
           },
 
           lua_ls = {
@@ -799,6 +803,7 @@ else
           typescript = { 'biome' },
           typescriptreact = { 'biome' },
           json = { 'biome' },
+          jsonc = { 'biome' },
           css = { 'biome' },
           -- Conform can also run multiple formatters sequentially
           -- python = { "isort", "black" },
